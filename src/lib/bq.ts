@@ -43,12 +43,24 @@ export interface QueryOptions {
   sql: string;
   /** พารามิเตอร์ชื่อ @name ใน SQL — ห้ามต่อสตริงค่าจากผู้ใช้เข้า SQL */
   params?: Record<string, unknown>;
-  /** ชนิดของพารามิเตอร์ถ้าเดาไม่ได้ เช่น { from: "DATE" } (ใช้ค่าเป็น "YYYY-MM-DD") */
+  /**
+   * ชนิดของพารามิเตอร์ถ้าเดาไม่ได้ (เช่น ค่า null) — ห้ามใช้กับวันที่/เวลา
+   * วันที่ให้ส่งเป็นข้อความ "YYYY-MM-DD" แล้วแปลงใน SQL: DATE(@from) หรือ DATETIME(DATE(@from))
+   */
   types?: Record<string, string>;
   maxBytes?: number;
 }
 
+/** ชนิดวันที่/เวลาใน types ทำให้ค่ากลายเป็น NULL เงียบ ๆ (คิวรีไม่ error แต่ได้ 0 แถว) จึงบังคับให้ error ดัง ๆ แทน */
+function assertNoDateTypes(types?: Record<string, string>): void {
+  const bad = Object.entries(types ?? {}).filter(([, t]) => /^(DATE|DATETIME|TIMESTAMP|TIME)$/i.test(t));
+  if (bad.length) {
+    throw new Error(`ห้ามระบุ types ชนิดวันที่/เวลา (${bad.map(([k]) => k).join(", ")}) ให้ส่งค่าเป็นข้อความ 'YYYY-MM-DD' แล้วแปลงใน SQL ด้วย DATE(@${bad[0][0]})`);
+  }
+}
+
 export async function runQuery<Row = Record<string, unknown>>(opts: QueryOptions): Promise<Row[]> {
+  assertNoDateTypes(opts.types);
   const bq = bigquery();
   assertReadOnly(opts.sql);
   const cap = opts.maxBytes ?? BYTES_CAP;
