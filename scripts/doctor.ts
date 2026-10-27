@@ -1,7 +1,7 @@
 // npm run doctor — ตรวจเครื่องก่อนเริ่ม (ไม่พิมพ์ค่าลับใด ๆ ออกมา)
-import { env, missingEnv } from "../src/config";
-import { bigquery, dataset, runQuery, T } from "../src/lib/bq";
-import { API, discordApi } from "../src/lib/discord";
+import { env, missingEnv } from "../src/config.js";
+import { bigquery, dataset, runQuery, T } from "../src/lib/bq.js";
+import { API, discordApi } from "../src/lib/discord.js";
 
 let failed = 0;
 const ok = (msg: string) => console.log(`✅ ${msg}`);

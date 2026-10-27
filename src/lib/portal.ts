@@ -1,7 +1,7 @@
 // ถาม Class Portal ว่า Discord ID นี้ผูกกับพนักงานแล้วหรือยัง
 // สัญญา: GET {PORTAL_URL}/api/directory/<discordId>  (Authorization: Bearer CLASS_API_KEY)
 //   200 { linked: true, name }  = ผูกแล้ว · 404 = ยังไม่ผูก · 401 = key ผิด
-import { env } from "../config";
+import { env } from "../config.js";
 
 export type Who = { name: string } | null;
 

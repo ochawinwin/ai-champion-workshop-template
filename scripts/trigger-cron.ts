@@ -1,5 +1,5 @@
 // npm run cron:test — สั่งให้ cron ทำงานเดี๋ยวนี้ (ไม่ต้องรอ 09:00) เรียก {APP_URL}/api/cron?force=1 ด้วย CRON_SECRET
-import { env } from "../src/config";
+import { env } from "../src/config.js";
 
 async function main() {
   const base = env("APP_URL").replace(/\/+$/, "");

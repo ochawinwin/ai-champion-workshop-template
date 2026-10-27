@@ -1,7 +1,7 @@
 // คำสั่ง slash ของบอท — เพิ่มคำสั่งใหม่ตามแบบ ping/whoami แล้วใส่ใน commands ด้านล่าง
 // เพิ่ม/แก้คำสั่งแล้ว ต้อง deploy และรัน npm run register ให้ Discord รู้จัก
-import { env } from "./config";
-import { whoisCached } from "./lib/portal";
+import { env } from "./config.js";
+import { whoisCached } from "./lib/portal.js";
 
 /** ข้อมูลของคนที่เรียกคำสั่ง — userId มาจากข้อมูลที่ Discord เซ็นรับรอง ไม่ใช่ข้อความที่พิมพ์ */
 export interface Ctx {

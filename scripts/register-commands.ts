@@ -1,7 +1,7 @@
 // npm run register — ลงทะเบียนคำสั่งใน server ทดสอบ (เห็นทันที) ต้องรันใหม่ทุกครั้งที่เพิ่ม/แก้คำสั่งใน src/commands.ts
-import { commands } from "../src/commands";
-import { env, missingEnv } from "../src/config";
-import { discordApi } from "../src/lib/discord";
+import { commands } from "../src/commands.js";
+import { env, missingEnv } from "../src/config.js";
+import { discordApi } from "../src/lib/discord.js";
 
 async function main() {
   const missing = missingEnv();

@@ -2,8 +2,8 @@
 // ตั้งค่าใน Discord Developer Portal → General Information → Interactions Endpoint URL = https://<โปรเจกต์>.vercel.app/api/discord
 // กติกา: ตรวจลายเซ็นทุกคำขอ · ต้องตอบภายใน 3 วินาที (คำสั่งที่ช้าให้ตอบรับก่อนแล้วทำต่อด้วย waitUntil)
 import { waitUntil } from "@vercel/functions";
-import { commands, type Command, type Ctx } from "../src/commands";
-import { EPHEMERAL, clip, editOriginal, verifyDiscordRequest } from "../src/lib/discord";
+import { commands, type Command, type Ctx } from "../src/commands.js";
+import { EPHEMERAL, clip, editOriginal, verifyDiscordRequest } from "../src/lib/discord.js";
 
 const byName = new Map(commands.map((c) => [c.def.name, c]));
 

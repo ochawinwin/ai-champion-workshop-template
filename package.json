@@ -2,6 +2,7 @@
   "name": "ai-champion-workshop-template",
   "version": "2.0.0",
   "private": true,
+  "type": "module",
   "description": "Starter ขนาดเล็กของ AI Champion Workshop 3: บอท Discord บน Vercel (Interactions + Cron) ต่อข้อมูล FutureSkill",
   "engines": {
     "node": ">=22"

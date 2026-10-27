@@ -1,7 +1,7 @@
 // ส่วนที่ต้องถูกต้องเสมอ: ตรวจลายเซ็นของ Discord · เรียก Discord REST · แก้ข้อความตอบ
 // บอทนี้ไม่ได้ "ต่อค้าง" กับ Discord (ไม่มี Gateway) Discord ส่ง HTTP มาหา /api/discord ทุกครั้งที่มีคนใช้คำสั่ง
 import { createPublicKey, verify } from "node:crypto";
-import { env } from "../config";
+import { env } from "../config.js";
 
 export const API = "https://discord.com/api/v10";
 export const EPHEMERAL = 64; // flag: ข้อความที่เห็นเฉพาะผู้เรียกคำสั่ง

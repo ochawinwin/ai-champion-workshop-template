@@ -1,7 +1,7 @@
 // ทางเดียวที่โค้ดของบอทใช้อ่าน BigQuery: runQuery()
 // กันให้: SELECT อย่างเดียว · ห้าม SELECT * · dry run ก่อน · เพดานข้อมูล 1 GB · ติด label learner · ห้ามคืน customer_key
 import { BigQuery } from "@google-cloud/bigquery";
-import { BYTES_CAP, env } from "../config";
+import { BYTES_CAP, env } from "../config.js";
 
 let _bq: BigQuery | undefined;
 let _project = "";
