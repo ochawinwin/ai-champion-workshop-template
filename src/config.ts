@@ -1,7 +1,8 @@
-// ตัวแปรที่ต้องมี (ดู .env.example) — อ่านตอนใช้งาน ไม่ throw ตอน import เพื่อให้ doctor รายงานได้
+// ตัวแปรที่ต้องมีใน W1 (ดู .env.example) — อ่านตอนใช้งาน ไม่ throw ตอน import เพื่อให้ doctor รายงานได้
 export const REQUIRED_ENV = [
   "DISCORD_BOT_TOKEN",
   "DISCORD_APP_ID",
+  "DISCORD_PUBLIC_KEY",
   "DISCORD_GUILD_ID",
   "DISCORD_FALLBACK_CHANNEL_ID",
   "LEARNER_HANDLE",

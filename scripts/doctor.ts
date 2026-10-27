@@ -1,6 +1,7 @@
 // npm run doctor — ตรวจเครื่องก่อนเริ่ม (ไม่พิมพ์ค่าลับใด ๆ ออกมา)
 import { env, missingEnv } from "../src/config";
 import { bigquery, dataset, runQuery, T } from "../src/lib/bq";
+import { API, discordApi } from "../src/lib/discord";
 
 let failed = 0;
 const ok = (msg: string) => console.log(`✅ ${msg}`);
@@ -10,7 +11,7 @@ const bad = (msg: string, hint?: string) => {
 };
 const short = (e: unknown) => (e instanceof Error ? e.message : String(e)).replace(/\s+/g, " ").slice(0, 160);
 
-async function checkEnv(): Promise<boolean> {
+function checkEnv(): boolean {
   const missing = missingEnv();
   if (missing.length) {
     bad(`env ไม่ครบ ขาด: ${missing.join(", ")}`, "เปิด .env.local แล้ววางค่าให้ครบ (ดู .env.example)");
@@ -21,15 +22,19 @@ async function checkEnv(): Promise<boolean> {
 }
 
 async function checkDiscord() {
+  if (!/^[0-9a-f]{64}$/i.test(env("DISCORD_PUBLIC_KEY"))) {
+    bad("DISCORD_PUBLIC_KEY รูปแบบไม่ถูกต้อง (ต้องเป็นตัวอักษร 0-9 a-f ยาว 64 ตัว)", "คัดลอก Public Key จากหน้า General Information ของ Application ใน Developer Portal");
+  } else {
+    ok("Discord: Public Key รูปแบบถูกต้อง");
+  }
   try {
-    const h = { Authorization: `Bot ${env("DISCORD_BOT_TOKEN")}` };
-    const me = await fetch("https://discord.com/api/v10/users/@me", { headers: h, signal: AbortSignal.timeout(8000) });
-    if (!me.ok) return bad(`Discord token ใช้ไม่ได้ (HTTP ${me.status})`, "กด Reset Token ที่ Developer Portal แล้ววางค่าใหม่");
-    const guild = await fetch(`https://discord.com/api/v10/guilds/${env("DISCORD_GUILD_ID")}`, { headers: h, signal: AbortSignal.timeout(8000) });
-    if (!guild.ok) return bad(`บอทล็อกอินได้ แต่ไม่พบ server (HTTP ${guild.status})`, "ตรวจ DISCORD_GUILD_ID และว่าเชิญบอทเข้า server แล้ว");
-    ok("Discord: บอทล็อกอินได้ และอยู่ใน server ทดสอบ");
+    const me = await discordApi("GET", "/users/@me");
+    if (me.status !== 200) return bad(`Discord token ใช้ไม่ได้ (HTTP ${me.status})`, "กด Reset Token ที่ Developer Portal แล้ววางค่าใหม่");
+    const guild = await discordApi("GET", `/guilds/${env("DISCORD_GUILD_ID")}`);
+    if (guild.status !== 200) return bad(`บอทล็อกอินได้ แต่ไม่พบ server (HTTP ${guild.status})`, "ตรวจ DISCORD_GUILD_ID และว่าเชิญบอทเข้า server แล้ว");
+    ok("Discord: token ใช้ได้ และบอทอยู่ใน server ทดสอบ");
   } catch (e) {
-    bad(`Discord ต่อไม่ได้: ${short(e)}`);
+    bad(`Discord ต่อไม่ได้ (${API}): ${short(e)}`);
   }
 }
 
@@ -47,9 +52,7 @@ async function checkPortal() {
 
 async function checkBigQuery() {
   try {
-    const rows = await runQuery({
-      sql: `SELECT TRIM(code) AS code FROM ${T("courses")} WHERE actual_launch >= DATE '1900-01-01' LIMIT 1`,
-    });
+    const rows = await runQuery({ sql: `SELECT TRIM(code) AS code FROM ${T("courses")} WHERE actual_launch >= DATE '1900-01-01' LIMIT 1` });
     if (!rows.length) return bad("BigQuery: คิวรีได้แต่ไม่พบข้อมูล", "ตรวจ BQ_DATASET");
     ok("BigQuery: อ่านข้อมูล (dry run + คิวรีจริง) ผ่าน");
   } catch (e) {
@@ -79,12 +82,16 @@ async function checkOpenRouter() {
   }
 }
 
-console.log("ตรวจเครื่อง (ไม่แสดงค่าลับ)\n");
-if (await checkEnv()) {
-  await checkDiscord();
-  await checkPortal();
-  await checkBigQuery();
-  await checkOpenRouter();
+async function main() {
+  console.log("ตรวจเครื่อง (ไม่แสดงค่าลับ)\n");
+  if (checkEnv()) {
+    await checkDiscord();
+    await checkPortal();
+    await checkBigQuery();
+    await checkOpenRouter();
+  }
+  console.log(failed ? `\nไม่ผ่าน ${failed} ข้อ แก้ตามคำแนะนำแล้วรันใหม่` : "\nผ่านครบทุกข้อ ขั้นต่อไป: push ขึ้น GitHub แล้ว deploy บน Vercel");
+  process.exit(failed ? 1 : 0);
 }
-console.log(failed ? `\nไม่ผ่าน ${failed} ข้อ แก้ตามคำแนะนำแล้วรันใหม่` : "\nผ่านครบทุกข้อ พร้อมรัน: npm run dev");
-process.exit(failed ? 1 : 0);
+
+main();

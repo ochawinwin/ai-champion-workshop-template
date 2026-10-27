@@ -3,8 +3,11 @@
 .env.*
 !.env.example
 
-# ข้อมูลที่บอทสร้างในเครื่อง (watchlist / subscription)
+# ข้อมูลที่สร้างในเครื่อง
 .data/
+
+# ไฟล์ของ Vercel CLI
+.vercel/
 
 node_modules/
 dist/
