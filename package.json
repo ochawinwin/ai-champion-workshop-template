@@ -1,0 +1,28 @@
+{
+  "name": "ai-champion-workshop-template",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Starter ขนาดเล็กของ AI Champion Workshop 3: บอท Discord บนข้อมูล FutureSkill",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "tsx watch --env-file=.env.local src/index.ts",
+    "start": "tsx src/index.ts",
+    "doctor": "tsx --env-file=.env.local scripts/doctor.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google-cloud/bigquery": "^9.5.0",
+    "@openrouter/ai-sdk-provider": "^3.1.0",
+    "ai": "^7.0.154",
+    "discord.js": "^14.27.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5"
+  }
+}

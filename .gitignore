@@ -1,0 +1,13 @@
+# ค่าลับ — ห้ามขึ้น GitHub
+.env
+.env.*
+!.env.example
+
+# ข้อมูลที่บอทสร้างในเครื่อง (watchlist / subscription)
+.data/
+
+node_modules/
+dist/
+*.log
+.DS_Store
+Thumbs.db
